@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightning Webstore</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Lightning Webstore</h1>
+        <div class="node-status" id="node-status">
+            Connecting to node...
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        Bitcoin Bootcamp - Day 4 | Powered by Lightning Network
+    </footer>
+
+    <script>
+        // Fetch node status
+        fetch('/api/node_info')
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('node-status');
+                if (data.error) {
+                    el.innerHTML = 'Node: <span style="color:#e91e63">offline</span>';
+                } else {
+                    el.innerHTML = 'Node: <span class="online">' + data.alias +
+                        '</span> | Channels: ' + data.channels;
+                }
+            })
+            .catch(() => {
+                document.getElementById('node-status').innerHTML =
+                    'Node: <span style="color:#e91e63">offline</span>';
+            });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

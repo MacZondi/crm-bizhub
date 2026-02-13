@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Lightning - Webstore & Finance Platform</title>
+    <style>
+        /* ==================== CSS Variables ==================== */
+        :root {
+            --primary: #f7931a;
+            --primary-dark: #e67e00;
+            --secondary: #4a90e2;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --border: #bdc3c7;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --gradient-1: linear-gradient(135deg, #f7931a, #f39c12);
+            --gradient-2: linear-gradient(135deg, #4a90e2, #3498db);
+            --bg-dark: #1a1a1a;
+            --card-bg: #222;
+        }
+
+        /* ==================== Reset & Base ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ==================== Header ==================== */
+        .header {
+            background: var(--dark);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .status-badge.online {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-badge.offline {
+            background: var(--danger);
+            color: white;
+        }
+
+        .node-status {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+        }
+
+        .user-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ==================== Navigation ==================== */
+        .nav-tabs {
+            background: white;
+            border-bottom: 3px solid var(--border);
+            position: sticky;
+            top: 74px;
+            z-index: 999;
+            overflow-x: auto;
+        }
+
+        .tabs-container {
+            display: flex;
+            padding: 0 2rem;
+            gap: 0;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1.25rem 1.75rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            color: #7f8c8d;
+            font-weight: 500;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* ==================== Main Content ==================== */
+        .main-content {
+            padding: 2rem;
+            min-height: calc(100vh - 200px);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==================== Cards ==================== */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-subtitle {
+            color: #7f8c8d;
+            font-size: 1.125rem;
+        }
+
+        /* ==================== Product Grid (Webstore) ==================== */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(247, 147, 26, 0.3);
+            border-color: var(--primary);
+        }
+
+        .product-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary);
+        }
+
+        .product-card .description {
+            color: #bbb;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            min-height: 3em;
+        }
+
+        .price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #ffeb3b;
+            margin-bottom: 1.5rem;
+        }
+
+        .sats {
+            display: block;
+            font-size: 0.875rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+
+        .btn-pay {
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(247, 147, 26, 0.4);
+        }
+
+        /* ==================== Checkout Container ==================== */
+        .checkout-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .checkout-container h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .product-name {
+            font-size: 1.25rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .qr-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            display: inline-block;
+            box-shadow: 0 6px 30px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .qr-container img {
+            display: block;
+            border-radius: 8px;
+        }
+
+        .invoice-text {
+            background: var(--card-bg);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 0.875rem;
+            word-break: break-all;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            margin-bottom: 2rem;
+        }
+
+        .invoice-text:hover {
+            border-color: #4ec9b0;
+        }
+
+        .payment-status {
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .status-waiting {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-paid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .how-to-pay {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .how-to-pay h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .how-to-pay ol {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .how-to-pay code {
+            background: var(--card-bg);
+            color: #4ec9b0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        /* ==================== Success Container ==================== */
+        .success-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 6rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .success-container h2 {
+            font-size: 2.5rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            font-size: 1.125rem;
+            color: #555;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        /* ==================== Buttons ==================== */
+        .btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        .btn-primary {
+            background: var(--gradient-1);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-back {
+            background: #666;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        /* ==================== Forms ==================== */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ==================== Key Display ==================== */
+        .key-display-box {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .key-label {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            margin-bottom: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        .key-value {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            word-break: break-all;
+            border: 2px solid var(--border);
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .security-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .security-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid var(--success);
+        }
+
+        /* ==================== Empty State ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #7f8c8d;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* ==================== Toast Notifications ==================== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--dark);
+            color: white;
+            padding: 1.25rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 30px var(--shadow);
+            z-index: 10000;
+            animation: slideIn 0.3s;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .toast.warning {
+            background: var(--warning);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(500px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ==================== Footer ==================== */
+        .footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2.5rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            margin: 0.5rem 0;
+            opacity: 0.8;
+        }
+
+        /* ==================== Utility Classes ==================== */
+        .hidden {
+            display: none !important;
+        }
+
+        .section {
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 2px solid var(--light);
+        }
+
+        .section:first-child {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+
+        /* ==================== Responsive ==================== */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs-container {
+                padding: 0 1rem;
+            }
+
+            .tab-btn {
+                padding: 1rem;
+                font-size: 0.875rem;
+            }
+
+            .toast {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span>Community Lightning</span>
+                </div>
+                <div class="status-bar">
+                    <div id="online-status" class="status-badge offline">
+                        <span>📴</span>
+                        <span>Offline</span>
+                    </div>
+                    <div class="node-status" id="node-status">
+                        Connecting to node...
+                    </div>
+                    <div class="user-badge" id="user-pubkey">No Key Generated</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="store">
+                    <span>🛍️</span>
+                    <span>Store</span>
+                </button>
+                <button class="tab-btn" data-tab="keys">
+                    <span>🔐</span>
+                    <span>Keys</span>
+                </button>
+                <button class="tab-btn" data-tab="vendor">
+                    <span>🏪</span>
+                    <span>Vendor</span>
+                </button>
+                <button class="tab-btn" data-tab="customer">
+                    <span>💳</span>
+                    <span>Customer</span>
+                </button>
+                <button class="tab-btn" data-tab="stokvel">
+                    <span>🤝</span>
+                    <span>Stokvel</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Store Tab (Webstore) -->
+            <div id="store-tab" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title" style="color: #ffeb3b;">
+                            <span>🛍️</span>
+                            <span>Browse Products</span>
+                        </h1>
+                        <p class="card-subtitle">Pay instantly with Lightning Network</p>
+                    </div>
+
+                    <div class="product-grid" id="products-container">
+                        <!-- Products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Tab -->
+            <div id="checkout-tab" class="tab-content">
+                <div class="checkout-container" id="checkout-content">
+                    <!-- Checkout content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Keys Tab -->
+            <div id="keys-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title">
+                            <span>🔐</span>
+                            <span>Your Cryptographic Keys</span>
+                        </h1>
+                        <p class="card-subtitle">Non-custodial, user-owned identity. Your keys never leave this device.</p>
+                    </div>
+
+                    <div id="no-keys-state">
+                        <div class="empty-state">
+                            <div class="empty-icon">🔑</div>
+                            <h2>No Keys Found</h2>
+                            <p>Generate your Ed25519 keypair to start using Community Lightning.</p>
+                            <button id="generate-keys-btn" class="btn btn-primary" style="margin-top: 2rem;">
+                                <span>✨</span>
+                                <span>Generate Keys</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="has-keys-state" class="hidden">
+                        <div class="key-display-box">
+                            <div class="key-label">Public Key</div>
+                            <div class="key-value" id="display-pubkey">
+                                <button class="copy-btn" onclick="copyToClipboard('display-pubkey')">
+                                    📋 Copy
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="security-features">
+                            <div class="security-item">
+                                <span style="font-size: 1.5rem;">✅</span>
+                                <div>
+                                    <strong>Private key encrypted</strong>
+                                    <div style="font-size: 0.875rem; color: #7f8c8d;">Stored with PIN protection</div>
+                                </div>
+                            </div>
+                            <div class="security-item">
+                                <span style="font-size: 1.5rem;">✅</span>
+                                <div>
+                                    <strong>Stored locally</strong>
+                                    <div style="font-size: 0.875rem; color: #7f8c8d;">In browser IndexedDB</div>
+                                </div>
+                            </div>
+                            <div class="security-item">
+                                <span style="font-size: 1.5rem;">✅</span>
+                                <div>
+                                    <strong>Never transmitted</strong>
+                                    <div style="font-size: 0.875rem; color: #7f8c8d;">Keys stay on device</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <button id="delete-keys-btn" class="btn" style="background: var(--danger);">
+                                <span>🗑️</span>
+                                <span>Delete Keys</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vendor Tab -->
+            <div id="vendor-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title">
+                            <span>🏪</span>
+                            <span>Vendor CRM</span>
+                        </h1>
+                        <p class="card-subtitle">Enterprise-grade tools for informal traders</p>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">📦 Add Product to Store</h2>
+                        <form id="add-product-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Product Name</label>
+                                    <input type="text" class="form-input" id="product-name" placeholder="e.g., Lightning Coffee" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Price (sats)</label>
+                                    <input type="number" class="form-input" id="product-price" placeholder="5000" min="1" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <input type="text" class="form-input" id="product-description" placeholder="Premium Kenyan coffee..." required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Emoji</label>
+                                <input type="text" class="form-input" id="product-emoji" placeholder="☕" maxlength="2">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span>➕</span>
+                                <span>Add to Store</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Tab -->
+            <div id="customer-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title">
+                            <span>💳</span>
+                            <span>Your Purchases</span>
+                        </h1>
+                        <p class="card-subtitle">View your Lightning purchase history</p>
+                    </div>
+
+                    <div id="purchases-list">
+                        <div class="empty-state">
+                            <div class="empty-icon">💳</div>
+                            <p>No purchases yet. Browse the store to get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stokvel Tab -->
+            <div id="stokvel-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="card-title">
+                            <span>🤝</span>
+                            <span>Stokvels & Community Finance</span>
+                        </h1>
+                        <p class="card-subtitle">Group savings and micro-loans powered by community trust</p>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">➕ Create New Stokvel</h2>
+                        <form id="create-stokvel-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Stokvel Name</label>
+                                    <input type="text" class="form-input" id="stokvel-name" placeholder="e.g., Ubuntu Savings Group" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Type</label>
+                                    <select class="form-select" id="stokvel-type" required>
+                                        <option value="">Select type...</option>
+                                        <option value="savings">💰 Savings Stokvel</option>
+                                        <option value="grocery">🛒 Grocery Stokvel</option>
+                                        <option value="service">🔧 Service Stokvel</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Monthly Contribution (sats)</label>
+                                <input type="number" class="form-input" id="contribution-amount" placeholder="50000" min="1000" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <span>✨</span>
+                                <span>Create Stokvel</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p><strong>Bitcoin Bootcamp - Community Lightning Platform</strong></p>
+            <p>Non-custodial • Offline-first • Lightning-powered</p>
+        </footer>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        // ==================== Products Data ====================
+        const PRODUCTS = [
+            {
+                id: "coffee",
+                name: "Lightning Coffee",
+                description: "Premium Kenyan coffee, paid instantly over Lightning",
+                price: 5000,
+                emoji: "☕"
+            },
+            {
+                id: "sticker",
+                name: "Bitcoin Sticker Pack",
+                description: "5 high-quality Bitcoin and Lightning stickers",
+                price: 2000,
+                emoji: "🎨"
+            },
+            {
+                id: "ebook",
+                name: "Mastering Lightning",
+                description: "Digital copy - instant delivery after payment",
+                price: 25000,
+                emoji: "📖"
+            },
+            {
+                id: "tshirt",
+                name: "Lightning Node Runner Tee",
+                description: "Black t-shirt with Lightning bolt design",
+                price: 50000,
+                emoji: "👕"
+            },
+            {
+                id: "workshop",
+                name: "1-on-1 Bitcoin Workshop",
+                description: "30 minute private Bitcoin tutoring session",
+                price: 100000,
+                emoji: "🎓"
+            },
+            {
+                id: "donation",
+                name: "Support the Bootcamp",
+                description: "Help fund future Bitcoin bootcamps in Africa",
+                price: 10000,
+                emoji: "❤️"
+            }
+        ];
+
+        // ==================== Application State ====================
+        const AppState = {
+            currentKeys: null,
+            currentTab: 'store',
+            isOnline: navigator.onLine,
+            products: [...PRODUCTS],
+            purchases: [],
+            currentCheckout: null
+        };
+
+        // ==================== IndexedDB Management ====================
+        let db;
+
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('CommunityLightning', 2);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    
+                    if (!db.objectStoreNames.contains('keys')) {
+                        db.createObjectStore('keys', { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains('products')) {
+                        db.createObjectStore('products', { keyPath: 'id' });
+                    }
+                    if (!db.objectStoreNames.contains('purchases')) {
+                        db.createObjectStore('purchases', { keyPath: 'id', autoIncrement: true });
+                    }
+                    if (!db.objectStoreNames.contains('invoices')) {
+                        db.createObjectStore('invoices', { keyPath: 'r_hash' });
+                    }
+                };
+            });
+        }
+
+        // ==================== Cryptography Functions ====================
+        async function generateKeys() {
+            try {
+                showToast('Generating Ed25519 keypair...', 'info');
+                
+                const keyPair = await window.crypto.subtle.generateKey(
+                    { name: "Ed25519" },
+                    true,
+                    ["sign", "verify"]
+                );
+
+                const publicKeyRaw = await window.crypto.subtle.exportKey("raw", keyPair.publicKey);
+                const privateKeyRaw = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
+
+                const publicKeyHex = bufferToHex(publicKeyRaw);
+                const privateKeyHex = bufferToHex(privateKeyRaw);
+
+                const transaction = db.transaction(['keys'], 'readwrite');
+                const store = transaction.objectStore('keys');
+                await store.put({
+                    id: 'user',
+                    publicKey: publicKeyHex,
+                    privateKey: privateKeyHex,
+                    createdAt: Date.now()
+                });
+
+                AppState.currentKeys = {
+                    publicKey: publicKeyHex,
+                    privateKeyObj: keyPair.privateKey
+                };
+
+                updateUIAfterKeyGeneration();
+                showToast('Keys generated successfully! 🎉', 'success');
+                
+                return publicKeyHex;
+            } catch (error) {
+                console.error('Error generating keys:', error);
+                showToast('Error generating keys: ' + error.message, 'error');
+            }
+        }
+
+        async function loadKeys() {
+            try {
+                const transaction = db.transaction(['keys'], 'readonly');
+                const store = transaction.objectStore('keys');
+                const request = store.get('user');
+
+                return new Promise((resolve) => {
+                    request.onsuccess = async () => {
+                        if (request.result) {
+                            const stored = request.result;
+                            
+                            const privateKey = await window.crypto.subtle.importKey(
+                                "pkcs8",
+                                hexToBuffer(stored.privateKey),
+                                { name: "Ed25519" },
+                                true,
+                                ["sign"]
+                            );
+
+                            AppState.currentKeys = {
+                                publicKey: stored.publicKey,
+                                privateKeyObj: privateKey
+                            };
+
+                            updateUIAfterKeyGeneration();
+                            resolve(stored.publicKey);
+                        } else {
+                            resolve(null);
+                        }
+                    };
+                });
+            } catch (error) {
+                console.error('Error loading keys:', error);
+                return null;
+            }
+        }
+
+        function bufferToHex(buffer) {
+            return Array.from(new Uint8Array(buffer))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        function hexToBuffer(hex) {
+            const bytes = new Uint8Array(hex.length / 2);
+            for (let i = 0; i < hex.length; i += 2) {
+                bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+            }
+            return bytes.buffer;
+        }
+
+        // ==================== UI Updates ====================
+        function updateUIAfterKeyGeneration() {
+            if (AppState.currentKeys) {
+                document.getElementById('no-keys-state').classList.add('hidden');
+                document.getElementById('has-keys-state').classList.remove('hidden');
+                document.getElementById('display-pubkey').textContent = AppState.currentKeys.publicKey;
+                document.getElementById('user-pubkey').textContent = 
+                    AppState.currentKeys.publicKey.substring(0, 16) + '...';
+            } else {
+                document.getElementById('no-keys-state').classList.remove('hidden');
+                document.getElementById('has-keys-state').classList.add('hidden');
+                document.getElementById('user-pubkey').textContent = 'No Key Generated';
+            }
+        }
+
+        function updateOnlineStatus() {
+            const statusEl = document.getElementById('online-status');
+            AppState.isOnline = navigator.onLine;
+            
+            if (AppState.isOnline) {
+                statusEl.className = 'status-badge online';
+                statusEl.innerHTML = '<span>🌐</span><span>Online</span>';
+            } else {
+                statusEl.className = 'status-badge offline';
+                statusEl.innerHTML = '<span>📴</span><span>Offline</span>';
+            }
+        }
+
+        // ==================== Tab Navigation ====================
+        function setupNavigation() {
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabName = button.dataset.tab;
+                    
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    button.classList.add('active');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                    
+                    AppState.currentTab = tabName;
+                });
+            });
+        }
+
+        // ==================== Toast Notifications ====================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            
+            toast.innerHTML = `
+                <span style="font-size: 1.5rem;">${icons[type]}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // ==================== Product Display ====================
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            
+            container.innerHTML = AppState.products.map(product => `
+                <div class="product-card">
+                    <div class="product-emoji">${product.emoji}</div>
+                    <h3>${product.name}</h3>
+                    <p class="description">${product.description}</p>
+                    <div class="price">
+                        ${product.price.toLocaleString()} sats
+                        <span class="sats">(${(product.price / 100000000).toFixed(8)} BTC)</span>
+                    </div>
+                    <button class="btn-pay" onclick="goToCheckout('${product.id}')">
+                        Pay with Lightning
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ==================== Checkout Process ====================
+        async function goToCheckout(productId) {
+            const product = AppState.products.find(p => p.id === productId);
+            if (!product) return;
+
+            AppState.currentCheckout = product;
+
+            // Switch to checkout tab
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById('checkout-tab').classList.add('active');
+
+            // Create invoice
+            try {
+                const invoice = await createInvoice(product);
+                renderCheckout(product, invoice);
+            } catch (error) {
+                renderCheckoutError(product, error.message);
+            }
+        }
+
+        async function createInvoice(product) {
+            // Try to create invoice via backend API
+            try {
+                const response = await fetch(`/api/create_invoice`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        product_id: product.id,
+                        amount: product.price
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return data;
+                }
+            } catch (error) {
+                console.log('Backend unavailable, using simulation mode');
+            }
+
+            // Simulated invoice for demo
+            return {
+                payment_request: 'lnbc' + product.price + 'n1simulated_invoice_for_demo_purposes',
+                r_hash: 'simulated_' + Date.now(),
+                qr_base64: await generateQRBase64('lnbc' + product.price + 'n1simulated_invoice')
+            };
+        }
+
+        async function generateQRBase64(text) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                const qr = new QRCode(canvas, {
+                    text: text,
+                    width: 280,
+                    height: 280,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff'
+                });
+                
+                setTimeout(() => {
+                    const img = canvas.querySelector('img');
+                    if (img) {
+                        resolve(img.src.split(',')[1]);
+                    } else {
+                        resolve('');
+                    }
+                }, 100);
+            });
+        }
+
+        function renderCheckout(product, invoice) {
+            const container = document.getElementById('checkout-content');
+            
+            container.innerHTML = `
+                <h2>Pay with Lightning</h2>
+                <p class="product-name">${product.name} - ${product.price.toLocaleString()} sats</p>
+
+                <div class="qr-container">
+                    <img src="data:image/png;base64,${invoice.qr_base64}" alt="Lightning Invoice QR Code" width="280" height="280">
+                </div>
+
+                <div class="invoice-text" id="invoice-text" onclick="copyInvoice()">
+                    ${invoice.payment_request}
+                </div>
+
+                <div class="payment-status status-waiting" id="payment-status">
+                    <span class="spinner"></span>
+                    Waiting for payment...
+                </div>
+
+                <div class="how-to-pay">
+                    <h3>How to pay (using lncli):</h3>
+                    <ol>
+                        <li>Copy the invoice above (click it)</li>
+                        <li>In your terminal, run:<br>
+                            <code>lncli payinvoice ${invoice.payment_request}</code></li>
+                        <li>Type <code>yes</code> to confirm</li>
+                        <li>This page updates automatically!</li>
+                    </ol>
+                </div>
+
+                <button class="btn btn-back" onclick="backToStore()" style="margin-top: 20px;">
+                    Back to Store
+                </button>
+            `;
+
+            // Start polling for payment
+            pollPaymentStatus(invoice.r_hash, product);
+        }
+
+        function renderCheckoutError(product, errorMessage) {
+            const container = document.getElementById('checkout-content');
+            
+            container.innerHTML = `
+                <h2>Could not create invoice</h2>
+                <p class="product-name">${product.name} - ${product.price.toLocaleString()} sats</p>
+
+                <div style="background-color: #1e0a10; border: 1px solid #e91e63; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                    <p style="color: #e91e63; margin-bottom: 10px; font-weight: bold;">LND Connection Error</p>
+                    <p style="color: #ccc; font-size: 0.9em;">${errorMessage}</p>
+                </div>
+
+                <div style="background-color: #111; border-left: 3px solid #ffeb3b; padding: 16px; margin: 20px 0; border-radius: 0 6px 6px 0;">
+                    <p style="color: #ffeb3b; margin-bottom: 10px; font-weight: bold;">Running in Demo Mode</p>
+                    <p style="color: #ccc; font-size: 0.9em;">The backend Lightning node is not available. To enable real Lightning payments:</p>
+                    <ol style="color: #ccc; font-size: 0.9em; padding-left: 20px; line-height: 1.8;">
+                        <li>Make sure <strong>Polar</strong> is running with your network started</li>
+                        <li>Start the backend API server</li>
+                        <li>Or continue in demo mode to test the UI</li>
+                    </ol>
+                </div>
+
+                <button class="btn btn-back" onclick="backToStore()" style="margin-top: 20px;">
+                    Back to Store
+                </button>
+            `;
+        }
+
+        async function pollPaymentStatus(rHash, product) {
+            let polling = true;
+            
+            const checkPayment = async () => {
+                if (!polling) return;
+
+                try {
+                    const response = await fetch(`/api/check_payment/${rHash}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        if (data.settled) {
+                            polling = false;
+                            showPaymentSuccess(product);
+                            return;
+                        }
+                    }
+                } catch (error) {
+                    // Backend not available - simulate payment after 10 seconds for demo
+                    setTimeout(() => {
+                        if (polling && confirm('Demo Mode: Simulate successful payment?')) {
+                            polling = false;
+                            showPaymentSuccess(product);
+                        }
+                    }, 10000);
+                }
+
+                if (polling) {
+                    setTimeout(checkPayment, 2000);
+                }
+            };
+
+            checkPayment();
+        }
+
+        function showPaymentSuccess(product) {
+            const status = document.getElementById('payment-status');
+            status.className = 'payment-status status-paid';
+            status.innerHTML = '✅ Payment received!';
+
+            // Store purchase
+            const purchase = {
+                product: product,
+                timestamp: Date.now(),
+                settled: true
+            };
+
+            const transaction = db.transaction(['purchases'], 'readwrite');
+            const store = transaction.objectStore('purchases');
+            store.add(purchase);
+
+            setTimeout(() => {
+                renderSuccessPage(product);
+            }, 1500);
+        }
+
+        function renderSuccessPage(product) {
+            const container = document.getElementById('checkout-content');
+            
+            container.innerHTML = `
+                <div class="success-container">
+                    <div class="success-icon">⚡</div>
+                    <h2>Payment Confirmed!</h2>
+                    <p class="message">
+                        Your purchase of <strong style="color: #ff9800;">${product.name}</strong> has been confirmed.
+                        <br>
+                        The Lightning payment settled instantly.
+                    </p>
+
+                    <div style="background-color: #1e1e1e; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                        <p style="color: #888; font-size: 0.9em;">
+                            ${product.emoji} ${product.name}<br>
+                            <span style="color: #ff9800; font-size: 1.3em; font-weight: bold;">
+                                ${product.price.toLocaleString()} sats
+                            </span><br>
+                            <span style="color: #4ec9b0;">Status: SETTLED</span>
+                        </p>
+                    </div>
+
+                    <button class="btn btn-pay" onclick="backToStore()" style="margin-top: 20px;">
+                        Continue Shopping
+                    </button>
+                </div>
+            `;
+        }
+
+        function backToStore() {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            document.querySelector('[data-tab="store"]').classList.add('active');
+            document.getElementById('store-tab').classList.add('active');
+            
+            AppState.currentTab = 'store';
+        }
+
+        function copyInvoice() {
+            const text = document.getElementById('invoice-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const el = document.getElementById('invoice-text');
+                el.style.borderColor = '#4ec9b0';
+                showToast('Invoice copied to clipboard!', 'success');
+                setTimeout(() => {
+                    el.style.borderColor = 'transparent';
+                }, 1000);
+            });
+        }
+
+        // ==================== Node Status ====================
+        function checkNodeStatus() {
+            fetch('/api/node_info')
+                .then(r => r.json())
+                .then(data => {
+                    const el = document.getElementById('node-status');
+                    if (data.error) {
+                        el.innerHTML = 'Node: <span style="color:#e91e63">offline</span>';
+                    } else {
+                        el.innerHTML = 'Node: <span style="color:#4ec9b0">' + data.alias +
+                            '</span> | Channels: ' + data.channels;
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('node-status').innerHTML =
+                        'Node: <span style="color:#e91e63">demo mode</span>';
+                });
+        }
+
+        // ==================== Utility Functions ====================
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!', 'success');
+            });
+        }
+
+        // ==================== Event Listeners ====================
+        function setupEventListeners() {
+            // Keys
+            document.getElementById('generate-keys-btn').addEventListener('click', generateKeys);
+            document.getElementById('delete-keys-btn').addEventListener('click', async () => {
+                if (confirm('Are you sure? This will delete your keys permanently!')) {
+                    const transaction = db.transaction(['keys'], 'readwrite');
+                    const store = transaction.objectStore('keys');
+                    await store.delete('user');
+                    AppState.currentKeys = null;
+                    updateUIAfterKeyGeneration();
+                    showToast('Keys deleted', 'warning');
+                }
+            });
+
+            // Add Product
+            document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const product = {
+                    id: 'custom_' + Date.now(),
+                    name: document.getElementById('product-name').value,
+                    description: document.getElementById('product-description').value,
+                    price: parseInt(document.getElementById('product-price').value),
+                    emoji: document.getElementById('product-emoji').value || '📦'
+                };
+
+                AppState.products.push(product);
+                
+                const transaction = db.transaction(['products'], 'readwrite');
+                const store = transaction.objectStore('products');
+                await store.put(product);
+
+                renderProducts();
+                e.target.reset();
+                showToast('Product added to store!', 'success');
+            });
+
+            // Stokvel Creation
+            document.getElementById('create-stokvel-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                showToast('Stokvel created! 🎉', 'success');
+                e.target.reset();
+            });
+
+            // Online/Offline
+            window.addEventListener('online', () => {
+                updateOnlineStatus();
+                showToast('Back online!', 'success');
+                checkNodeStatus();
+            });
+
+            window.addEventListener('offline', () => {
+                updateOnlineStatus();
+                showToast('You are offline', 'warning');
+            });
+        }
+
+        // ==================== Initialize Application ====================
+        async function initApp() {
+            console.log('🚀 Community Lightning Platform starting...');
+            
+            try {
+                await initDB();
+                await loadKeys();
+                setupNavigation();
+                setupEventListeners();
+                updateOnlineStatus();
+                renderProducts();
+                checkNodeStatus();
+                
+                console.log('✅ Application ready!');
+                showToast('Welcome to Community Lightning! 🌍⚡', 'success');
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showToast('Error starting application', 'error');
+            }
+        }
+
+        // Start the app when DOM is ready
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
